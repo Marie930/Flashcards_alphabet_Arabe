@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Flashcards des Lettres Arabes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            text-align: center;
+            margin: 20px;
+        }
+        .flashcard {
+            font-size: 4em;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 80%;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+        input {
+            padding: 10px;
+            font-size: 1.5em;
+            margin: 10px;
+            width: 80%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 15px;
+            font-size: 1.5em;
+            cursor: pointer;
+            margin: 10px;
+            width: 80%;
+            max-width: 300px;
+            box-sizing: border-box;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        p#result {
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            .flashcard {
+                font-size: 3em;
+            }
+            input, button {
+                font-size: 1.2em;
+            }
+            p#result {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Jeu de Flashcards : Lettres Arabes</h1>
+    <div class="flashcard" id="flashcard">?</div>
+    
+    <input type="text" id="letterGuess" placeholder="Nom de la lettre">
+    <input type="text" id="formGuess" placeholder="Forme (isolée, début, médiane, fin)">
+    
+    <button onclick="checkAnswer()">Vérifier</button>
+    <button onclick="nextCard()">Prochaine Carte</button>
+    
+    <p id="result"></p>
+
+    <script>
+        const lettersData = [
+
+            {
+                lettre: "Alif", 
+                isolée: "ا", 
+                début: "ا", 
+                médiane: "ا", 
+                fin: "ا"
+            },
+    
+            {
+                lettre: "Ba", 
+                isolée: "ب", 
+                début: "بـ", 
+                médiane: "ـبـ", 
+                fin: "ـب"
+            },
+    
+            {
+                lettre: "Ta", 
+                isolée: "ت", 
+                début: "تـ", 
+                médiane: "ـتـ", 
+                fin: "ـت"
+            },
+    
+            {
+                lettre: "Tha", 
+                isolée: "ث", 
+                début: "ثـ", 
+                médiane: "ـثـ", 
+                fin: "ـث"
+            },
+    
+            {
+                lettre: "Jim", 
+                isolée: "ج", 
+                début: "جـ", 
+                médiane: "ـجـ", 
+                fin: "ـج"
+            },
+    
+            {
+                lettre: "Ha", 
+                isolée: "ح", 
+                début: "حـ", 
+                médiane: "ـحـ", 
+                fin: "ـح"
+            },
+    
+            {
+                lettre: "Kha", 
+                isolée: "خ", 
+                début: "خـ", 
+                médiane: "ـخـ", 
+                fin: "ـخ"
+            },
+    
+            {
+                lettre: "Dal", 
+                isolée: "د", 
+                début: "د", 
+                médiane: "ـد", 
+                fin: "ـد"
+            },
+    
+            {
+                lettre: "Dhal", 
+                isolée: "ذ", 
+                début: "ذ", 
+                médiane: "ـذ", 
+                fin: "ـذ"
+            },
+    
+            {
+                lettre: "Ra", 
+                isolée: "ر", 
+                début: "ر", 
+                médiane: "ـر", 
+                fin: "ـر"
+            },
+    
+            {
+                lettre: "Zay", 
+                isolée: "ز", 
+                début: "ز", 
+                médiane: "ـز", 
+                fin: "ـز"
+            },
+    
+            {
+                lettre: "Sin", 
+                isolée: "س", 
+                début: "سـ", 
+                médiane: "ـسـ", 
+                fin: "ـس"
+            },
+    
+            {
+                lettre: "Shin", 
+                isolée: "ش", 
+                début: "شـ", 
+                médiane: "ـشـ", 
+                fin: "ـش"
+            },
+    
+            {
+                lettre: "Sad", 
+                isolée: "ص", 
+                début: "صـ", 
+                médiane: "ـصـ", 
+                fin: "ـص"
+            },
+    
+            {
+                lettre: "Dad", 
+                isolée: "ض", 
+                début: "ضـ", 
+                médiane: "ـضـ", 
+                fin: "ـض"
+            },
+    
+            {
+                lettre: "Ta", 
+                isolée: "ط", 
+                début: "طـ", 
+                médiane: "ـطـ", 
+                fin: "ـط"
+            },
+    
+            {
+                lettre: "Za", 
+                isolée: "ظ", 
+                début: "ظـ", 
+                médiane: "ـظـ", 
+                fin: "ـظ"
+            },
+    
+            {
+                lettre: "Ayn", 
+                isolée: "ع", 
+                début: "عـ", 
+                médiane: "ـعـ", 
+                fin: "ـع"
+            },
+    
+            {
+                lettre: "Ghayn", 
+                isolée: "غ", 
+                début: "غـ", 
+                médiane: "ـغـ", 
+                fin: "ـغ"
+            },
+    
+            {
+                lettre: "Fa", 
+                isolée: "ف", 
+                début: "فـ", 
+                médiane: "ـفـ", 
+                fin: "ـف"
+            },
+    
+            {
+                lettre: "Qaf", 
+                isolée: "ق", 
+                début: "قـ", 
+                médiane: "ـقـ", 
+                fin: "ـق"
+            },
+    
+            {
+                lettre: "Kaf", 
+                isolée: "ك", 
+                début: "كـ", 
+                médiane: "ـكـ", 
+                fin: "ـك"
+            },
+    
+            {
+                lettre: "Lam", 
+                isolée: "ل", 
+                début: "لـ", 
+                médiane: "ـلـ", 
+                fin: "ـل"
+            },
+    
+            {
+                lettre: "Mim", 
+                isolée: "م", 
+                début: "مـ", 
+                médiane: "ـمـ", 
+                fin: "ـم"
+            },
+    
+            {
+                lettre: "Nun", 
+                isolée: "ن", 
+                début: "نـ", 
+                médiane: "ـنـ", 
+                fin: "ـن"
+            },
+    
+            {
+                lettre: "Ha", 
+                isolée: "ه", 
+                début: "هـ", 
+                médiane: "ـهـ", 
+                fin: "ـه"
+            },
+    
+            {
+                lettre: "Waw", 
+                isolée: "و", 
+                début: "و", 
+                médiane: "ـو", 
+                fin: "ـو"
+            },
+    
+            {
+                lettre: "Ya", 
+                isolée: "ي", 
+                début: "يـ", 
+                médiane: "ـيـ", 
+                fin: "ـي"
+            },
+    
+        ];
+
+        let currentLetter = {};
+        let currentForm = "";
+
+        function nextCard() {
+            const randomLetter = lettersData[Math.floor(Math.random() * lettersData.length)];
+            const forms = ["isolée", "début", "médiane", "fin"];
+            currentForm = forms[Math.floor(Math.random() * forms.length)];
+            currentLetter = randomLetter;
+            document.getElementById("flashcard").innerText = randomLetter[currentForm];
+            document.getElementById("result").innerText = "";
+
+            // Clear previous guesses
+            document.getElementById("letterGuess").value = '';
+            document.getElementById("formGuess").value = '';
+        }
+
+        function checkAnswer() {
+            const letterGuess = document.getElementById("letterGuess").value.toLowerCase();
+            const formGuess = document.getElementById("formGuess").value.toLowerCase();
+            
+            if (letterGuess === currentLetter.lettre.toLowerCase() && formGuess === currentForm) {
+                document.getElementById("result").innerText = "Mabrouk ! Bien joué !";
+            } else {
+                document.getElementById("result").innerText = 
+                    `La... La bonne réponse était la lettre ${currentLetter.lettre} sous la forme ${currentForm}.`;
+            }
+        }
+
+        // Initialize the first card
+        nextCard();
+    </script>
+
+</body>
+</html>
