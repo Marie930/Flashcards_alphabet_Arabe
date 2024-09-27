@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeu de Flashcards des Lettres Arabes</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Noto Sans Arabic', Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
@@ -66,7 +67,7 @@
         }
         @media (max-width: 600px) {
             h1 {
-                font-size: 1.5em;
+                font-size: 1.2em;
             }
             .flashcard {
                 font-size: 3em;
@@ -82,7 +83,7 @@
 </head>
 <body>
 
-    <h1>Jeu de Flashcards : Lettres Arabes</h1>
+    <h1>Jeu de Flashcards : <br>Lettres Arabes</h1>
     <div class="flashcard" id="flashcard">?</div>
     
     <input type="text" id="letterGuess" placeholder="Nom de la lettre">
@@ -92,6 +93,8 @@
     <button onclick="nextCard()">Prochaine Carte</button>
     
     <p id="result"></p>
+    <h1>"    ا (Alif), د (Dal), ذ (Dhal), ر (Ra), ز (Zay), و (Waw).
+        Ces lettres ne se lient jamais à la lettre qui les suit, mais elles peuvent se lier à la lettre qui les précède."</h1>
 
     <script>
         const lettersData = [
@@ -100,8 +103,8 @@
                 lettre: "Alif", 
                 isolée: "ا", 
                 début: "ا", 
-                médiane: "ا", 
-                fin: "ا"
+                médiane: "ـا", 
+                fin: "ـا"
             },
     
             {
@@ -322,6 +325,7 @@
     
         ];
 
+
         let currentLetter = {};
         let currentForm = "";
 
@@ -342,17 +346,33 @@
             const letterGuess = document.getElementById("letterGuess").value.toLowerCase();
             const formGuess = document.getElementById("formGuess").value.toLowerCase();
             
-            if (letterGuess === currentLetter.lettre.toLowerCase() && formGuess === currentForm) {
+            // Liste des formes correctes
+            let correctForms = [];
+
+            // Cas où isolée = début
+            if (currentLetter.isolée === currentLetter.début) {
+                correctForms.push('isolée', 'début');
+            } else {
+                correctForms.push(currentForm);
+            }
+
+            // Cas où médiane = fin
+            if (currentLetter.médiane === currentLetter.fin) {
+                correctForms.push('médiane', 'fin');
+            }
+
+            // Vérification de la réponse
+            if (correctForms.includes(formGuess) && letterGuess === currentLetter.lettre.toLowerCase()) {
                 document.getElementById("result").innerText = "Mabrouk ! Bien joué !";
             } else {
                 document.getElementById("result").innerText = 
-                    `La... La bonne réponse était la lettre ${currentLetter.lettre} sous la forme ${currentForm}.`;
+                    `La bonne réponse était la lettre ${currentLetter.lettre} sous la forme ${correctForms.join(' ou ')}.`;
             }
         }
 
-        // Initialize the first card
+        // Initialise la première carte
         nextCard();
-    </script>
+        </script>
 
 </body>
 </html>
